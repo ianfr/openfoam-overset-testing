@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+cd "${0%/*}" || exit 1
+. "${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions"
+
+cleanCase
+rm -rf mesh/background/constant/polyMesh mesh/finOverset/constant/polyMesh
+rm -f mesh/background/log.* mesh/finOverset/log.* log.mergeMeshes log.checkMesh.full
+rm -f constant/dynamicMeshDict system/controlDict system/fvSchemes system/fvSolution

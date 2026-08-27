@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e
+cd "${0%/*}" || exit 1
+. "${WM_PROJECT_DIR:?}/bin/tools/RunFunctions"
+
+test -d constant/polyMesh || { echo "Run ./Allmesh first" >&2; exit 1; }
+
+# If a steady run exists, use its latest fields as the t=0 transient state.
+latest=$(foamListTimes -latestTime 2>/dev/null || true)
+case "$latest" in
+    ""|0) ;;
+    *)
+        for fld in U p k omega nut zoneID pointDisplacement; do
+            test -f "$latest/$fld" && cp "$latest/$fld" "0/$fld"
+        done
+        foamListTimes -rm -time '0.000000001:' >/dev/null
+        ;;
+esac
+
+cp constant/dynamicMeshDict.transient constant/dynamicMeshDict
+cp system/controlDict.transient system/controlDict
+cp system/fvSchemes.transient system/fvSchemes
+cp system/fvSolution.transient system/fvSolution
+
+runApplication overPimpleDyMFoam

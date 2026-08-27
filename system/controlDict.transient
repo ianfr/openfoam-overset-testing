@@ -1,0 +1,53 @@
+FoamFile { format ascii; class dictionary; object controlDict; }
+
+libs (overset fvMotionSolvers);
+application overPimpleDyMFoam;
+startFrom startTime;
+startTime 0;
+stopAt endTime;
+endTime 0.25;
+deltaT 0.00025;
+adjustTimeStep yes;
+maxCo 0.7;
+maxDeltaT 0.001;
+writeControl adjustableRunTime;
+writeInterval 0.005;
+purgeWrite 0;
+writeFormat binary;
+writePrecision 8;
+writeCompression off;
+timeFormat general;
+timePrecision 9;
+runTimeModifiable true;
+
+functions
+{
+    forces
+    {
+        type forces;
+        libs (forces);
+        patches (body fin);
+        rho rhoInf;
+        rhoInf 1025;
+        CofR (-1.2 0 -0.1);
+        writeControl timeStep;
+        writeInterval 1;
+    }
+    finForceCoeffs
+    {
+        type forceCoeffs;
+        libs (forces);
+        patches (fin);
+        rho rhoInf;
+        rhoInf 1025;
+        CofR (-1.2 0 -0.1);
+        liftDir (0 1 0);
+        dragDir (-1 0 0);
+        pitchAxis (0 0 1);
+        magUInf 2.05777778;
+        lRef 0.1;
+        Aref 0.02;
+        writeControl timeStep;
+        writeInterval 1;
+    }
+}

@@ -1,0 +1,31 @@
+FoamFile { format ascii; class dictionary; object topoSetDict; }
+
+actions
+(
+    {
+        name backgroundCells;
+        type cellSet;
+        action new;
+        source regionToCell;
+        insidePoints ((7 1 1));
+    }
+    {
+        name finCells;
+        type cellSet;
+        action new;
+        source cellToCell;
+        set backgroundCells;
+    }
+    {
+        name finCells;
+        type cellSet;
+        action invert;
+    }
+    {
+        name finZone;
+        type cellZoneSet;
+        action new;
+        source setToCellZone;
+        set finCells;
+    }
+);

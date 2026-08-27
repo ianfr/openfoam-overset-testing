@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+cd "${0%/*}" || exit 1
+. "${WM_PROJECT_DIR:?}/bin/tools/RunFunctions"
+
+test -d constant/polyMesh || ./Allmesh
+
+cp constant/dynamicMeshDict.steady constant/dynamicMeshDict
+cp system/controlDict.steady system/controlDict
+cp system/fvSchemes.steady system/fvSchemes
+cp system/fvSolution.steady system/fvSolution
+
+runApplication overSimpleFoam

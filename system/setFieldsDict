@@ -1,0 +1,20 @@
+FoamFile { format ascii; class dictionary; object setFieldsDict; }
+
+defaultFieldValues
+(
+    volScalarFieldValue zoneID 123
+);
+
+regions
+(
+    cellToCell
+    {
+        set backgroundCells;
+        fieldValues (volScalarFieldValue zoneID 0);
+    }
+    cellToCell
+    {
+        set finCells;
+        fieldValues (volScalarFieldValue zoneID 1);
+    }
+);

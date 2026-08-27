@@ -1,0 +1,13 @@
+FoamFile { format ascii; class volScalarField; object k; }
+dimensions [0 2 -2 0 0 0 0];
+internalField uniform 0.015878;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+    inlet { type fixedValue; value uniform 0.015878; }
+    outlet { type inletOutlet; inletValue uniform 0.015878; value uniform 0.015878; }
+    farfield { type zeroGradient; }
+    "(body|fin)" { type kqRWallFunction; value uniform 0.015878; }
+    overset { type overset; }
+}

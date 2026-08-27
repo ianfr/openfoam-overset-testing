@@ -1,0 +1,12 @@
+FoamFile { format ascii; class pointVectorField; object pointDisplacement; }
+dimensions [0 1 0 0 0 0 0];
+internalField uniform (0 0 0);
+
+boundaryField
+{
+    ".*"
+    {
+        type uniformFixedValue;
+        uniformValue (0 0 0);
+    }
+}

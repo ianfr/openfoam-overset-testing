@@ -1,0 +1,15 @@
+FoamFile { format ascii; class dictionary; object dynamicMeshDict; }
+
+dynamicFvMesh dynamicOversetFvMesh;
+motionSolverLibs (fvMotionSolvers);
+solver multiSolidBodyMotionSolver;
+
+multiSolidBodyMotionSolverCoeffs
+{
+    finZone
+    {
+        solidBodyMotionFunction tabulated6DoFMotion;
+        CofG (-1.2 0 -0.1);
+        timeDataFileName "<constant>/finMotion.dat";
+    }
+}

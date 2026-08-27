@@ -1,0 +1,36 @@
+#!/bin/sh
+set -e
+cd "${0%/*}" || exit 1
+. "${WM_PROJECT_DIR:?}/bin/tools/RunFunctions"
+
+cp system/controlDict.steady system/controlDict
+cp system/fvSchemes.steady system/fvSchemes
+cp system/fvSolution.steady system/fvSolution
+cp constant/dynamicMeshDict.steady constant/dynamicMeshDict
+
+rm -rf mesh/background/constant/polyMesh mesh/finOverset/constant/polyMesh constant/polyMesh
+rm -f mesh/background/log.blockMesh mesh/background/log.snappyHexMesh
+rm -f mesh/finOverset/log.blockMesh mesh/finOverset/log.snappyHexMesh
+rm -f log.mergeMeshes log.topoSet log.setFields log.checkMesh log.checkMesh.full
+
+# The supplied cylinder terminates on the fin root plane.  A small +Z offset
+# makes the outer interface closed and gives the body/overset meshes overlap.
+surfaceTransformPoints -translate '(0 0 0.025)' \
+    constant/triSurface/finOversetDomain.stl \
+    mesh/finOverset/constant/triSurface/finOversetDomainMesh.stl \
+    > mesh/finOverset/log.surfaceTransformPoints 2>&1
+
+(cd mesh/background && runApplication blockMesh && runApplication snappyHexMesh -overwrite)
+(cd mesh/finOverset && runApplication blockMesh && runApplication snappyHexMesh -overwrite)
+
+# Keep the overset patch first: v2212 treats the first overset patch as master.
+cp -r mesh/finOverset/constant/polyMesh constant/polyMesh
+mergeMeshes . mesh/background -overwrite > log.mergeMeshes 2>&1
+
+runApplication topoSet
+
+rm -rf 0
+cp -r 0.orig 0
+runApplication setFields
+runApplication checkMesh
+checkMesh -allGeometry -allTopology > log.checkMesh.full 2>&1
