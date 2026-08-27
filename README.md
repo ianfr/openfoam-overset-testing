@@ -51,3 +51,16 @@ The standard `checkMesh` result is `Mesh OK` (maximum non-orthogonality about
 `log.checkMesh.full` flags concave snappyHexMesh polyhedra near curved/snap
 transitions; review that report and tighten the production mesh as part of the
 mesh-convergence study.
+
+## Force histories
+
+Body and fin loads are tracked separately. Raw pressure/viscous forces and
+moments are written beneath `postProcessing/bodyForces` and
+`postProcessing/finForces`. Nondimensional histories are written beneath
+`postProcessing/bodyForceCoeffs` and `postProcessing/finForceCoeffs`.
+
+Body moments use `(0 0 0)` as their reference point. Fin moments use the hinge
+point `(-1.2 0 -0.1)`. Body coefficients use frontal area `0.0314159 m2` and
+length `3 m`; fin coefficients use planform area `0.02 m2` and chord `0.1 m`.
+The transient histories are sampled every time step, while the steady histories
+are sampled every ten SIMPLE iterations.

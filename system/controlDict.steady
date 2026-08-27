@@ -19,22 +19,33 @@ runTimeModifiable true;
 
 functions
 {
-    forces
+    bodyForces
     {
         type forces;
         libs (forces);
-        patches (body fin);
+        patches (body);
         rho rhoInf;
         rhoInf 1025;
         CofR (0 0 0);
         writeControl timeStep;
         writeInterval 10;
     }
-    forceCoeffs
+    finForces
+    {
+        type forces;
+        libs (forces);
+        patches (fin);
+        rho rhoInf;
+        rhoInf 1025;
+        CofR (-1.2 0 -0.1);
+        writeControl timeStep;
+        writeInterval 10;
+    }
+    bodyForceCoeffs
     {
         type forceCoeffs;
         libs (forces);
-        patches (body fin);
+        patches (body);
         rho rhoInf;
         rhoInf 1025;
         CofR (0 0 0);
@@ -44,6 +55,23 @@ functions
         magUInf 2.05777778;
         lRef 3;
         Aref 0.0314159;
+        writeControl timeStep;
+        writeInterval 10;
+    }
+    finForceCoeffs
+    {
+        type forceCoeffs;
+        libs (forces);
+        patches (fin);
+        rho rhoInf;
+        rhoInf 1025;
+        CofR (-1.2 0 -0.1);
+        liftDir (0 1 0);
+        dragDir (-1 0 0);
+        pitchAxis (0 0 1);
+        magUInf 2.05777778;
+        lRef 0.1;
+        Aref 0.02;
         writeControl timeStep;
         writeInterval 10;
     }
